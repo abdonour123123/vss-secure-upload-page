@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Lock, Zap, Eye, EyeOff, Info, AlertCircle } from 'lucide-react';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
+import { useState } from "react";
+import { Lock, Zap, Eye, EyeOff, Info, AlertCircle } from "lucide-react";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 
 interface ProcessingSettingsProps {
   fileName: string;
@@ -33,38 +33,38 @@ function ToggleSwitch({ enabled, onChange, disabled }: ToggleSwitchProps) {
       className={`
         relative inline-flex h-6 w-11 items-center rounded-full transition-colors
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-        ${enabled ? 'bg-blue-600' : 'bg-gray-300'}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}
+        ${enabled ? "bg-blue-600" : "bg-gray-300"}
+        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:opacity-90"}
       `}
     >
       <span
         className={`
           inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-          ${enabled ? 'translate-x-6' : 'translate-x-1'}
+          ${enabled ? "translate-x-6" : "translate-x-1"}
         `}
       />
     </button>
   );
 }
 
-export function ProcessingSettings({ 
-  fileName, 
-  fileSize, 
-  fileType, 
-  onBack, 
-  onProcess 
+export function ProcessingSettings({
+  fileName,
+  fileSize,
+  fileType,
+  onBack,
+  onProcess,
 }: ProcessingSettingsProps) {
   const [encryptEnabled, setEncryptEnabled] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [compressEnabled, setCompressEnabled] = useState(false);
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
   const getCompressionReduction = () => {
@@ -83,18 +83,19 @@ export function ProcessingSettings({
       encrypt: encryptEnabled,
       password: encryptEnabled ? password : undefined,
       compress: compressEnabled,
-      outputFileName: fileName
+      outputFileName: fileName,
     };
     onProcess(config);
   };
 
   const handleReset = () => {
     setEncryptEnabled(false);
-    setPassword('');
+    setPassword("");
     setCompressEnabled(false);
   };
 
-  const canProceed = !encryptEnabled || (encryptEnabled && password.trim().length >= 6);
+  const canProceed =
+    !encryptEnabled || (encryptEnabled && password.trim().length >= 6);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
@@ -102,7 +103,9 @@ export function ProcessingSettings({
         <Card className="p-8 shadow-xl rounded-2xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Processing Settings</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Processing Settings
+            </h1>
             <p className="text-gray-600">
               Choose how your files should be processed before saving.
             </p>
@@ -113,59 +116,75 @@ export function ProcessingSettings({
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900 truncate">{fileName}</p>
-                <p className="text-sm text-gray-600">{formatFileSize(fileSize)}</p>
+                <p className="text-sm text-gray-600">
+                  {formatFileSize(fileSize)}
+                </p>
               </div>
               {compressEnabled && (
                 <div className="text-right">
-                  <p className="text-sm font-medium text-blue-600">After compression</p>
-                  <p className="text-sm text-gray-600">{formatFileSize(getEstimatedSize())}</p>
+                  <p className="text-sm font-medium text-blue-600">
+                    After compression
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {formatFileSize(getEstimatedSize())}
+                  </p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Options Section */}
-          <div className="space-y-6 mb-8">
+          <div className="space-y-6 mb-8 px-4 sm:px-0">
             {/* Encryption Option */}
-            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-blue-300 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
+            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 hover:border-blue-300 transition-colors">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-3">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="p-2 bg-blue-100 rounded-lg shrink-0">
                     <Lock className="w-5 h-5 text-blue-600" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Encryption</h3>
-                    <p className="text-sm text-gray-600">Encrypt files for secure storage.</p>
-                  </div>
-                </div>
-                <ToggleSwitch
-                  enabled={encryptEnabled}
-                  onChange={setEncryptEnabled}
-                />
-              </div>
 
-              {/* Password Input */}
-              {encryptEnabled && (
-                <div className="mt-4 pl-12 space-y-3 animate-in fade-in duration-200">
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-2">
-                    <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-800">
-                      Using AES-256 encryption. Password must be at least 6 characters.
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-base sm:text-lg">
+                      Encryption
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Encrypt files for secure storage.
                     </p>
                   </div>
-                  
+                </div>
+
+                <div className="self-end sm:self-auto">
+                  <ToggleSwitch
+                    enabled={encryptEnabled}
+                    onChange={setEncryptEnabled}
+                  />
+                </div>
+              </div>
+
+              {encryptEnabled && (
+                <div className="mt-4 space-y-4 sm:pl-12 animate-in fade-in duration-200">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-2">
+                    <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm text-amber-800">
+                      Using AES-256 encryption. Password must be at least 6
+                      characters.
+                    </p>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Encryption Password
                     </label>
+
                     <div className="relative">
                       <input
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter a strong password"
-                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                       />
+
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
@@ -178,6 +197,7 @@ export function ProcessingSettings({
                         )}
                       </button>
                     </div>
+
                     {password && password.length < 6 && (
                       <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" />
@@ -190,34 +210,43 @@ export function ProcessingSettings({
             </div>
 
             {/* Compression Option */}
-            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-blue-300 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
+            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 hover:border-blue-300 transition-colors">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="p-2 bg-green-100 rounded-lg shrink-0">
                     <Zap className="w-5 h-5 text-green-600" />
                   </div>
+
                   <div>
-                    <h3 className="font-semibold text-gray-900">Compression</h3>
+                    <h3 className="font-semibold text-gray-900 text-base sm:text-lg">
+                      Compression
+                    </h3>
                     <p className="text-sm text-gray-600">
                       Compress files to save space and speed up upload/download.
                     </p>
                   </div>
                 </div>
-                <ToggleSwitch
-                  enabled={compressEnabled}
-                  onChange={setCompressEnabled}
-                />
+
+                <div className="self-end sm:self-auto">
+                  <ToggleSwitch
+                    enabled={compressEnabled}
+                    onChange={setCompressEnabled}
+                  />
+                </div>
               </div>
 
-              {/* Size Reduction Preview */}
               {compressEnabled && (
-                <div className="mt-4 pl-12 animate-in fade-in duration-200">
+                <div className="mt-4 sm:pl-12 animate-in fade-in duration-200">
                   <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <p className="text-xs text-green-800">
-                      <span className="font-semibold">Expected size reduction:</span> ~{Math.round(getCompressionReduction() * 100)}%
+                    <p className="text-xs sm:text-sm text-green-800 break-words leading-relaxed">
+                      <span className="font-semibold">
+                        Expected size reduction:
+                      </span>{" "}
+                      ~{Math.round(getCompressionReduction() * 100)}%
                       <br />
                       <span className="text-green-700">
-                        From {formatFileSize(fileSize)} to {formatFileSize(getEstimatedSize())}
+                        From {formatFileSize(fileSize)} to{" "}
+                        {formatFileSize(getEstimatedSize())}
                       </span>
                     </p>
                   </div>
@@ -227,10 +256,12 @@ export function ProcessingSettings({
 
             {/* Both Selected Note */}
             {encryptEnabled && compressEnabled && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3 animate-in fade-in duration-200">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3 animate-in fade-in duration-200">
                 <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-blue-900 mb-1">Processing Order</p>
+                  <p className="text-sm font-medium text-blue-900 mb-1">
+                    Processing Order
+                  </p>
                   <p className="text-sm text-blue-800">
                     Files will be first encrypted, then compressed.
                   </p>

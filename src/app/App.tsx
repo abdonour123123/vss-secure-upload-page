@@ -96,11 +96,13 @@ export default function App() {
               <Shield className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl">Secure File Upload</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl ">
+                Secure File Upload
+              </h1>
               <p className="text-gray-600">Welcome, {username}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button
               onClick={handleViewProfile}
               variant="outline"
